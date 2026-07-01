@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ASCII 아트 · 예쁜 글씨</title>
+<meta name="theme-color" content="#0f1420">
+<!-- iPhone 홈화면 추가 시 앱처럼 동작 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ASCII">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAC20lEQVR42u3by20bQRBF0YnB4t9eWT+TskhRlBSdY3GqcgINLYyHRnH6ADeArqozy5m+LX5KzSYrEByCQ3CoD45bqRkcgkNwKInjZnErNYNDcAgOwaFOOO6kZtPN8k5qBofgEByCQ3AIDsGh68NxLzWDQ1eI48/fz0GCA44rxLFY3tdsHBxlTwAHHHDAAQcccMDRCcdDzUbCUfQEcMABBxxwwAEHHHDAAQcccMABBxwzwvFYs5FwFD0BHHDAAQcccCRxLFePNRsHR9kTwAEHHHDAAQcccHTC8atmI+EoeoKp7DnLrqz4ZwAHHHDAAQcccMABBxxwwAEHHEPj2KdKD7kfpLJ7gwMOOOCAA44kjtVqnyo7ZPBhxSu7NzjggAMOOOCAA45OOA6p0kMeBqns3uCAAw444IADDjjggAMOOKriWB9ShYfMPax4ZfcGBxxf4XhKNc4PjJULHhQOOOCAAw4lcazXT6kcpkLBg8IBBxxwwCE41AnH71QOUwNH7KBwwAEHHHAIDsEhOASH4NCMcDyncpgaOGIHhQMOOOCAQ0kcm/VzKoepUPCgcMABBxxwaAgcwYcVrzKOY6r0kMdBKru3abM5pgoPmXtY8cruDQ444IADDjjggAMOOOCAAw44rg/HKVV6yNMgld0bHHDAAQcccCRxbDenVNkhgw8rXtm9wQEHHHDAAQcccHTC8ZIqPeTLIJXdGxxwwAEHHHDAAQcccMABBxxwwAHHjHCcU6WHPA9S2b3BAQcccMABRxLHbntOlR0y+LDild0bHHDAAQcccMABRyccr6nSQ74OUtm9wQEHHHDAAQcccMABBxxwwAEHHHDMCMclVXrIyyCV3RsccMABBxxwJHF8315SZYcMPqx4ZfcGBxxdcGhmwSE49F843qRmcAgOwSE4BIfgUFUcuzepGRz6Cse71AwOwSE4lMTxY/cuNYNDcAgOwaFOOD6kZnAIDsGhYP8A2MAoXv84hxgAAAAASUVORK5CYII=">
+<style>
+  :root{
+    --bg:#0f1420; --panel:#171d2c; --panel2:#1e2536; --line:#2a3350;
+    --txt:#e6ebf5; --dim:#8b96b0; --accent:#7c9eff; --accent2:#a0f0d0;
+    --star:#ffcb5b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Segoe UI",Roboto,sans-serif;
+    -webkit-text-size-adjust:100%;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    line-height:1.5;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:16px 14px 80px}
+  header h1{font-size:20px;margin:6px 0 2px;letter-spacing:-.02em}
+  header p{margin:0 0 14px;color:var(--dim);font-size:13px}
+  /* tabs */
+  .tabs{display:flex;gap:6px;position:sticky;top:0;z-index:5;
+    background:linear-gradient(var(--bg) 70%,transparent);padding:8px 0 10px}
+  .tab{flex:1;padding:10px 8px;border:1px solid var(--line);background:var(--panel);
+    color:var(--dim);border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;
+    text-align:center;transition:.15s}
+  .tab.active{background:var(--accent);color:#0c1020;border-color:var(--accent)}
+  section{display:none}
+  section.active{display:block}
+  /* converter input */
+  .field{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--txt);
+    border-radius:12px;padding:12px 14px;font-size:16px;resize:vertical;min-height:52px}
+  .field:focus{outline:none;border-color:var(--accent)}
+  .hint{color:var(--dim);font-size:12px;margin:8px 2px 4px}
+  /* cards */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:12px 12px 10px;margin:10px 0}
+  .card .label{font-size:12px;color:var(--dim);font-weight:600;margin-bottom:6px;
+    display:flex;align-items:center;gap:6px}
+  .preview{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    white-space:pre;overflow-x:auto;background:var(--panel2);border-radius:10px;
+    padding:10px 12px;font-size:15px;line-height:1.35;-webkit-overflow-scrolling:touch}
+  .preview.big{font-size:11px;line-height:1.05}
+  .row{display:flex;gap:8px;margin-top:8px}
+  .btn{border:1px solid var(--line);background:var(--panel2);color:var(--txt);
+    border-radius:10px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px}
+  .btn:active{transform:scale(.96)}
+  .btn.primary{background:var(--accent);color:#0c1020;border-color:var(--accent)}
+  .btn.star.on{background:rgba(255,203,91,.16);border-color:var(--star);color:var(--star)}
+  /* gallery */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}
+  .chip{padding:8px 14px;border:1px solid var(--line);background:var(--panel);
+    color:var(--dim);border-radius:999px;font-size:13px;font-weight:600;cursor:pointer}
+  .chip.active{background:var(--accent2);color:#0c1020;border-color:var(--accent2)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:14px 10px 10px;text-align:center;position:relative;cursor:pointer;transition:.12s}
+  .tile:active{transform:scale(.97)}
+  .tile .art{font-family:ui-monospace,Menlo,monospace;font-size:15px;white-space:pre;
+    display:block;min-height:38px;display:flex;align-items:center;justify-content:center;
+    overflow-x:auto}
+  .tile .mini{position:absolute;top:6px;right:6px;background:transparent;border:none;
+    font-size:16px;cursor:pointer;opacity:.5;padding:2px 4px;line-height:1}
+  .tile .mini.on{opacity:1;color:var(--star);
+    text-shadow:0 0 6px rgba(255,203,91,.55);font-size:18px}
+  .tile .del{position:absolute;top:6px;left:6px;background:transparent;border:none;
+    color:var(--dim);font-size:13px;cursor:pointer;opacity:.45;padding:2px 5px;line-height:1}
+  .tile .del:active{color:#ff8080;opacity:1}
+  /* 추가 입력줄 */
+  .addbar{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+  .addbar #newArt{flex:1;min-width:120px;font-size:16px;min-height:0;padding:10px 12px}
+  .addbar #newCat{flex:0 0 auto;font-size:14px;min-height:0;padding:10px 10px;
+    -webkit-appearance:none;appearance:none}
+  .addbar #addBtn{flex:0 0 auto}
+  /* 백업/코드 영역 */
+  .manage{margin-top:18px;border:1px solid var(--line);border-radius:12px;
+    background:var(--panel);padding:2px 12px 12px}
+  .manage summary{cursor:pointer;padding:10px 0;font-size:13px;color:var(--dim);font-weight:600}
+  .manage .mrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .manage textarea{width:100%;min-height:70px;font-family:ui-monospace,Menlo,monospace;
+    font-size:12px;margin-bottom:8px}
+  .empty{color:var(--dim);text-align:center;padding:40px 10px;font-size:14px}
+  /* toast */
+  #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));
+    transform:translateX(-50%) translateY(20px);background:var(--accent);color:#0c1020;
+    padding:10px 20px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;
+    pointer-events:none;transition:.2s;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  footer{color:var(--dim);font-size:11px;text-align:center;margin-top:24px;line-height:1.6}
+  @media (prefers-color-scheme: light){
+    /* 다크 기본 유지 — 라이트에서도 동일 팔레트로 눈 편하게 */
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>✨ ASCII 아트 · 예쁜 글씨</h1>
+    <p>광고 없는 개인용 도구 · 오프라인 동작</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="conv">✏️ 변환기</button>
+    <button class="tab" data-tab="gallery">🎨 갤러리</button>
+    <button class="tab" data-tab="favs">⭐ 즐겨찾기</button>
+  </nav>
+
+  <!-- 변환기 -->
+  <section id="conv" class="active">
+    <textarea id="input" class="field" placeholder="여기에 글자를 입력하세요 (예: hello / 안녕)" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea>
+    <div class="hint">입력하면 아래 스타일이 실시간으로 바뀝니다. 카드를 눌러 복사하세요.</div>
+    <div id="convOut"></div>
+  </section>
+
+  <!-- 갤러리 -->
+  <section id="gallery">
+    <div class="chips" id="chips"></div>
+    <div class="grid" id="galleryGrid"></div>
+    <div class="addbar">
+      <input id="newArt" class="field" placeholder="이모지·아트 붙여넣기" autocapitalize="off" autocomplete="off" spellcheck="false">
+      <select id="newCat" class="field"></select>
+      <button id="addBtn" class="btn primary">＋ 추가</button>
+    </div>
+    <details class="manage">
+      <summary>⚙︎ 백업 · 코드 내보내기</summary>
+      <div class="mrow">
+        <button id="exportBtn" class="btn">내보내기(복사)</button>
+        <button id="codeBtn" class="btn">코드용 스니펫(복사)</button>
+      </div>
+      <textarea id="ioArea" class="field" placeholder="백업 JSON을 여기에 붙여넣고 → [가져오기 적용]"></textarea>
+      <button id="applyBtn" class="btn">가져오기 적용</button>
+      <div class="hint">내보내기: 내 추가/삭제/즐겨찾기를 JSON으로 복사 → 메모앱 등에 붙여 보관.<br>
+        코드용 스니펫: 지금 갤러리 목록을 코드 조각으로 복사 → PC에서 GALLERY 배열에 붙여넣으면 영구 반영.</div>
+    </details>
+  </section>
+
+  <!-- 즐겨찾기 -->
+  <section id="favs">
+    <div id="favList"></div>
+  </section>
+
+  <footer>
+    iPhone: Safari 공유 → “홈 화면에 추가” 하면 앱처럼 전체화면·오프라인으로 쓸 수 있어요.<br>
+    즐겨찾기는 이 브라우저에 저장됩니다.
+  </footer>
+</div>
+
+<div id="toast">복사됨!</div>
+
+<script>
+"use strict";
+
+/* ============ 2. 예쁜 글씨 (특수문자 감싸기) ============ */
+// 화면상 글자 폭 추정 (한글/전각=2, 조합기호=0, 나머지=1)
+function dispWidth(str){
+  let w=0;
+  for(const ch of str){
+    const c=ch.codePointAt(0);
+    if((c>=0x300&&c<=0x36F)||(c>=0x1DC0&&c<=0x1DFF)||(c>=0x20D0&&c<=0x20FF)||(c>=0xFE20&&c<=0xFE2F)) continue; // 조합
+    if((c>=0x1100&&c<=0x115F)||(c>=0x2E80&&c<=0x303E)||(c>=0x3041&&c<=0x33FF)||
+       (c>=0x3400&&c<=0x4DBF)||(c>=0x4E00&&c<=0x9FFF)||(c>=0xA000&&c<=0xA4CF)||
+       (c>=0xAC00&&c<=0xD7A3)||(c>=0xF900&&c<=0xFAFF)||(c>=0xFE30&&c<=0xFE4F)||
+       (c>=0xFF00&&c<=0xFF60)||(c>=0xFFE0&&c<=0xFFE6)||c>=0x1F000) w+=2; // 전각/한글/이모지
+    else w+=1;
+  }
+  return w;
+}
+// 위아래 장식줄 사이에 글자를 가운데 정렬(앞 공백)로 넣기
+function centerBlock(top, s, bottom){
+  const ref=Math.max(dispWidth(top), dispWidth(bottom));
+  const lines=s.split("\n").map(line=>{
+    const pad=Math.max(0, Math.round((ref-dispWidth(line))/2));
+    return " ".repeat(pad)+line;
+  });
+  return top+"\n"+lines.join("\n")+"\n"+bottom;
+}
+const TRANSFORMS=[
+  // ── 앞뒤로 감싸기 ──
+  {name:"별 ✩", fn:s=>"⋆｡°✩ "+s+" ✩°｡⋆"},
+  {name:"반짝임 ✧", fn:s=>"✧･ﾟ: * "+s+" *:･ﾟ✧"},
+  {name:"하트 ♡", fn:s=>"｡ﾟ♡ "+s+" ♡ﾟ｡"},
+  {name:"하트 ❥", fn:s=>"˖⁺‧₊˚ ❥ "+s+" ❥ ˚₊‧⁺˖"},
+  {name:"꽃 ❀", fn:s=>"❀ ✿ "+s+" ✿ ❀"},
+  {name:"물결 ༘", fn:s=>"·˚ ༘ "+s+" ༘ ˚·"},
+  {name:"점 •°", fn:s=>"•°•° "+s+" °•°•"},
+  {name:"나비 彡", fn:s=>"★彡 "+s+" 彡★"},
+  {name:"괄호 ꒰꒱", fn:s=>"˚₊‧꒰ა "+s+" ໒꒱‧₊˚"},
+  {name:"라인 ※", fn:s=>"───※·°· "+s+" ·°·※───"},
+  {name:"화살 ➳", fn:s=>"➶ "+s+" ➷"},
+  // ── 위아래로 감싸기 ──
+  {name:"위아래 · 별줄", fn:s=>centerBlock("｡･:*:･ﾟ★,｡･:*:･ﾟ☆", s, "☆ﾟ･:*:･｡★ﾟ･:*:･｡")},
+  {name:"위아래 · 라인", fn:s=>centerBlock("─── ⋆⋅☆⋅⋆ ───", s, "─── ⋆⋅☆⋅⋆ ───")},
+  {name:"위아래 · 반짝", fn:s=>centerBlock("✦•·········•✦", s, "✦•·········•✦")},
+  {name:"위아래 · 꽃", fn:s=>centerBlock("˚ ༘ ೀ⋆｡˚", s, "˚｡⋆ೀ ༘ ˚")},
+  {name:"위아래 · 하트", fn:s=>centerBlock("｡♥‿♥｡", s, "｡♥‿♥｡")},
+];
+
+/* ============ 3. 갤러리 데이터 ============ */
+const CATS=[{key:"cute",label:"귀여운/동물"},{key:"emotion",label:"감정"},{key:"deco",label:"장식·구분선·하트"}];
+const GALLERY=[
+  {c:"cute",a:"ʕ•ᴥ•ʔ"},{c:"cute",a:"(=^･ω･^=)"},{c:"cute",a:"ᕕ( ᐛ )ᕗ"},
+  {c:"cute",a:"૮ ˶ᵔ ᵕ ᵔ˶ ა"},{c:"cute",a:"(・(ェ)・)"},{c:"cute",a:"ʚ(๑˃̵ᴗ˂̵)ɞ"},
+  {c:"cute",a:"ฅ^•ﻌ•^ฅ"},{c:"cute",a:"(=ↀωↀ=)"},{c:"cute",a:"ʕ￫ᴥ￩ʔ"},
+  {c:"cute",a:"/ᐠ｡ꞈ｡ᐟ\\"},{c:"cute",a:"(๑˃ᴗ˂)ﻭ"},{c:"cute",a:"ᕦ(ò_óˇ)ᕤ"},
+  {c:"cute",a:"( ˘ ³˘)♥"},{c:"cute",a:"৻( •̀ ᗜ •́ ৻)"},{c:"cute",a:"ʕっ•ᴥ•ʔっ"},
+  {c:"emotion",a:"(づ｡◕‿‿◕｡)づ"},{c:"emotion",a:"(╯°□°）╯︵ ┻━┻"},{c:"emotion",a:"¯\\_(ツ)_/¯"},
+  {c:"emotion",a:"(ノ_<。)"},{c:"emotion",a:"(っ˘̩╭╮˘̩)っ"},{c:"emotion",a:"( ͡° ͜ʖ ͡°)"},
+  {c:"emotion",a:"(｡•́︿•̀｡)"},{c:"emotion",a:"＼(^o^)／"},{c:"emotion",a:"(ง •̀_•́)ง"},
+  {c:"emotion",a:"(≧▽≦)"},{c:"emotion",a:"(´；ω；`)"},{c:"emotion",a:"ヽ(`Д´)ﾉ"},
+  {c:"emotion",a:"(¬‿¬)"},{c:"emotion",a:"(｡♥‿♥｡)"},{c:"emotion",a:"o(≧▽≦)o"},
+  {c:"deco",a:"｡･:*:･ﾟ★"},{c:"deco",a:"─── ⋆⋅☆⋅⋆ ───"},{c:"deco",a:"♡ ♥ ❥"},
+  {c:"deco",a:"✧･ﾟ: *✧･ﾟ:*"},{c:"deco",a:"˖⁺‧₊˚♡˚₊‧⁺˖"},{c:"deco",a:"•.¸♡ ¸.•*"},
+  {c:"deco",a:"━━━━━━━━━━"},{c:"deco",a:"✦ ✧ ✦ ✧ ✦"},{c:"deco",a:"˚₊· ͟͟͞͞➳❥"},
+  {c:"deco",a:"❀ ❀ ❀"},{c:"deco",a:"⋆｡°✩"},{c:"deco",a:"˗ˏˋ ★ ˎˊ˗"},
+  {c:"deco",a:"❥❥❥"},{c:"deco",a:"°˖✧◝(⁰▿⁰)◜✧˖°"},{c:"deco",a:"♪♬ ♫♪"},
+];
+
+/* ============ 4. 즐겨찾기 (localStorage) ============ */
+const FKEY="asciiTool.favorites";
+function getFavs(){ try{return JSON.parse(localStorage.getItem(FKEY))||[];}catch(e){return [];} }
+function saveFavs(a){ try{localStorage.setItem(FKEY,JSON.stringify(a));}catch(e){} }
+function isFav(t){ return getFavs().includes(t); }
+function toggleFav(t){
+  const a=getFavs(); const i=a.indexOf(t);
+  if(i>=0) a.splice(i,1); else a.push(t);
+  saveFavs(a); return i<0;
+}
+// 내가 추가한 항목 / 내가 숨긴(삭제한) 기본 항목
+const CKEY="asciiTool.customItems", HKEY="asciiTool.hiddenItems";
+function loadJSON(k){ try{return JSON.parse(localStorage.getItem(k))||[];}catch(e){return [];} }
+function saveJSON(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
+function getCustom(){ return loadJSON(CKEY); }        // [{c,a}]
+function getHidden(){ return loadJSON(HKEY); }        // [art]
+// 화면에 보일 최종 목록 = (기본 - 숨김) + 내가 추가
+function currentItems(){
+  const hidden=new Set(getHidden());
+  return GALLERY.filter(it=>!hidden.has(it.a)).concat(getCustom());
+}
+function isCustom(art){ return getCustom().some(i=>i.a===art); }
+function addItem(cat,art){
+  const cust=getCustom();
+  if(cust.some(i=>i.a===art&&i.c===cat)) return false; // 중복 방지
+  cust.push({c:cat,a:art}); saveJSON(CKEY,cust); return true;
+}
+function removeItem(item){
+  const cust=getCustom();
+  const idx=cust.findIndex(i=>i.a===item.a&&i.c===item.c);
+  if(idx>=0){ cust.splice(idx,1); saveJSON(CKEY,cust); }   // 내가 추가한 것 → 삭제
+  else { const h=getHidden(); if(!h.includes(item.a)){h.push(item.a);saveJSON(HKEY,h);} } // 기본 → 숨김
+}
+
+/* ============ 5. 복사 + 토스트 ============ */
+const toastEl=document.getElementById("toast");
+let toastTimer=null;
+function toast(msg){
+  toastEl.textContent=msg; toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toastEl.classList.remove("show"),1100);
+}
+async function copyText(t){
+  try{
+    if(navigator.clipboard&&window.isSecureContext){ await navigator.clipboard.writeText(t); }
+    else throw new Error("fallback");
+  }catch(e){
+    const ta=document.createElement("textarea");
+    ta.value=t; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand("copy"); }catch(_){}
+    document.body.removeChild(ta);
+  }
+  toast("복사됨!");
+}
+
+/* ============ 6. 카드 / 렌더 ============ */
+function starBtn(text){
+  const b=document.createElement("button");
+  b.className="btn star"+(isFav(text)?" on":"");
+  b.textContent=isFav(text)?"★ 저장됨":"☆ 즐겨찾기";
+  b.addEventListener("click",e=>{
+    e.stopPropagation();
+    const on=toggleFav(text);
+    b.classList.toggle("on",on);
+    b.textContent=on?"★ 저장됨":"☆ 즐겨찾기";
+    if(document.getElementById("favs").classList.contains("active")) renderFavs();
+  });
+  return b;
+}
+function makeCard(label,text,bigClass){
+  const card=document.createElement("div"); card.className="card";
+  const lab=document.createElement("div"); lab.className="label"; lab.textContent=label;
+  const pre=document.createElement("div"); pre.className="preview"+(bigClass?" big":""); pre.textContent=text;
+  const row=document.createElement("div"); row.className="row";
+  const copy=document.createElement("button"); copy.className="btn primary"; copy.textContent="복사";
+  copy.addEventListener("click",()=>copyText(text));
+  row.appendChild(copy); row.appendChild(starBtn(text));
+  card.appendChild(lab); card.appendChild(pre); card.appendChild(row);
+  return card;
+}
+
+/* 변환기 */
+const input=document.getElementById("input");
+const convOut=document.getElementById("convOut");
+function renderConv(){
+  const t=input.value;
+  convOut.innerHTML="";
+  if(!t.trim()){
+    convOut.innerHTML='<div class="empty">위에 글자를 입력하면 여러 스타일이 나타납니다.</div>';
+    return;
+  }
+  // 예쁜 글씨 (특수문자 감싸기)
+  for(const tr of TRANSFORMS){
+    let out; try{ out=tr.fn(t); }catch(e){ out=t; }
+    convOut.appendChild(makeCard(tr.name,out,false));
+  }
+}
+input.addEventListener("input",renderConv);
+
+/* 갤러리 */
+const chipsEl=document.getElementById("chips");
+const galleryGrid=document.getElementById("galleryGrid");
+let activeCat="cute";
+function renderChips(){
+  chipsEl.innerHTML="";
+  for(const cat of CATS){
+    const b=document.createElement("button");
+    b.className="chip"+(cat.key===activeCat?" active":"");
+    b.textContent=cat.label;
+    b.addEventListener("click",()=>{activeCat=cat.key;newCat.value=cat.key;renderChips();renderGallery();});
+    chipsEl.appendChild(b);
+  }
+}
+function tile(item){
+  const art=item.a;
+  const t=document.createElement("div"); t.className="tile";
+  const del=document.createElement("button"); del.className="del"; del.textContent="✕"; del.title="삭제";
+  del.addEventListener("click",e=>{
+    e.stopPropagation();
+    if(!confirm("삭제할까요?\n\n"+art)) return;
+    removeItem(item); renderGallery(); toast("삭제됨");
+  });
+  const mini=document.createElement("button"); mini.className="mini"+(isFav(art)?" on":"");
+  mini.textContent=isFav(art)?"★":"☆";
+  mini.addEventListener("click",e=>{
+    e.stopPropagation();
+    const on=toggleFav(art);
+    mini.classList.toggle("on",on); mini.textContent=on?"★":"☆";
+  });
+  const art_=document.createElement("span"); art_.className="art"; art_.textContent=art;
+  t.appendChild(del); t.appendChild(mini); t.appendChild(art_);
+  t.addEventListener("click",()=>copyText(art));
+  return t;
+}
+function renderGallery(){
+  galleryGrid.innerHTML="";
+  const items=currentItems().filter(it=>it.c===activeCat);
+  if(!items.length){
+    galleryGrid.innerHTML='<div class="empty">이 카테고리에 항목이 없어요. 위에서 추가해보세요.</div>';
+    return;
+  }
+  for(const it of items) galleryGrid.appendChild(tile(it));
+}
+
+/* 추가 / 백업 / 코드 내보내기 */
+const newArt=document.getElementById("newArt");
+const newCat=document.getElementById("newCat");
+CATS.forEach(c=>{const o=document.createElement("option");o.value=c.key;o.textContent=c.label;newCat.appendChild(o);});
+newCat.value=activeCat;
+function doAdd(){
+  const v=newArt.value.trim();
+  if(!v){ newArt.focus(); return; }
+  const cat=newCat.value;
+  if(addItem(cat,v)){ activeCat=cat; newArt.value=""; renderChips(); renderGallery(); toast("추가됨!"); }
+  else toast("이미 있어요");
+}
+document.getElementById("addBtn").addEventListener("click",doAdd);
+newArt.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();doAdd();} });
+
+const ioArea=document.getElementById("ioArea");
+document.getElementById("exportBtn").addEventListener("click",()=>{
+  const data={v:1,custom:getCustom(),hidden:getHidden(),favorites:getFavs()};
+  const json=JSON.stringify(data);
+  ioArea.value=json; copyText(json);
+});
+document.getElementById("codeBtn").addEventListener("click",()=>{
+  const lines=currentItems().map(it=>"  {c:"+JSON.stringify(it.c)+",a:"+JSON.stringify(it.a)+"},");
+  const snippet="const GALLERY=[\n"+lines.join("\n")+"\n];";
+  ioArea.value=snippet; copyText(snippet);
+});
+document.getElementById("applyBtn").addEventListener("click",()=>{
+  const raw=ioArea.value.trim();
+  if(!raw){ toast("붙여넣은 내용이 없어요"); return; }
+  let d; try{ d=JSON.parse(raw); }catch(e){ toast("형식이 올바르지 않아요"); return; }
+  if(Array.isArray(d.custom)) saveJSON(CKEY,d.custom);
+  if(Array.isArray(d.hidden)) saveJSON(HKEY,d.hidden);
+  if(Array.isArray(d.favorites)) saveFavs(d.favorites);
+  ioArea.value=""; renderChips(); renderGallery(); toast("가져왔어요!");
+});
+
+/* 즐겨찾기 */
+const favList=document.getElementById("favList");
+function renderFavs(){
+  const favs=getFavs();
+  favList.innerHTML="";
+  if(!favs.length){
+    favList.innerHTML='<div class="empty">아직 즐겨찾기가 없어요.<br>변환기나 갤러리에서 ☆ 를 눌러 저장하세요.</div>';
+    return;
+  }
+  const grid=document.createElement("div"); grid.className="grid";
+  favs.slice().reverse().forEach(art=>{
+    const t=document.createElement("div"); t.className="tile";
+    const span=document.createElement("span"); span.className="art"; span.textContent=art;
+    const mini=document.createElement("button"); mini.className="mini on"; mini.textContent="★";
+    mini.title="즐겨찾기 해제";
+    mini.addEventListener("click",e=>{ e.stopPropagation(); toggleFav(art); renderFavs(); });
+    t.appendChild(mini); t.appendChild(span);
+    t.addEventListener("click",()=>copyText(art));
+    grid.appendChild(t);
+  });
+  favList.appendChild(grid);
+}
+
+/* ============ 7. 탭 ============ */
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.tab).classList.add("active");
+    if(tab.dataset.tab==="favs") renderFavs();
+    if(tab.dataset.tab==="gallery") renderGallery();
+  });
+});
+
+/* 초기화 */
+renderConv();
+renderChips();
+renderGallery();
+</script>
+</body>
+</html>
