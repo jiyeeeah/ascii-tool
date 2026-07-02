@@ -309,12 +309,14 @@ function renderFavs(){
 }
 
 /* ============ 탭 (카테고리 + 즐겨찾기) ============ */
+const TKEY="asciiTool.lastTab";
 function setTab(catOrFavs){
   document.querySelectorAll(".tab").forEach(t=>
     t.classList.toggle("active",(t.dataset.cat||t.dataset.tab)===catOrFavs));
   const isFavs=catOrFavs==="favs";
   document.getElementById("gallery").classList.toggle("active",!isFavs);
   document.getElementById("favs").classList.toggle("active",isFavs);
+  try{localStorage.setItem(TKEY,catOrFavs);}catch(e){}
   if(isFavs){ renderFavs(); return; }
   activeCat=catOrFavs; newCat.value=catOrFavs; renderGallery();
 }
@@ -322,8 +324,9 @@ document.querySelectorAll(".tab").forEach(tab=>{
   tab.addEventListener("click",()=>setTab(tab.dataset.cat||tab.dataset.tab));
 });
 
-/* 초기화 */
-renderGallery();
+/* 초기화 — 마지막에 보던 탭 복원 */
+const lastTab=(()=>{try{return localStorage.getItem(TKEY);}catch(e){return null;}})();
+setTab(CATS.some(c=>c.key===lastTab)||lastTab==="favs" ? lastTab : "deco");
 </script>
 </body>
 </html>
