@@ -35,8 +35,11 @@
   header h1{font-size:20px;margin:6px 0 2px;letter-spacing:-.02em}
   header p{margin:0 0 14px;color:var(--dim);font-size:13px}
   #themeBtn{position:absolute;top:2px;right:0;font-size:16px;padding:7px 10px;border-radius:999px}
-  /* tabs */
-  .tabs{display:flex;gap:6px;position:sticky;top:0;z-index:5;
+  /* 다이나믹 아일랜드/상태바 영역 덮개 — 스크롤 콘텐츠가 비쳐 보이지 않게 */
+  body::before{content:"";position:fixed;top:0;left:0;right:0;
+    height:env(safe-area-inset-top);background:var(--bg);z-index:6}
+  /* tabs — safe area 아래에서 고정 (다이나믹 아일랜드 안 침범) */
+  .tabs{display:flex;gap:6px;position:sticky;top:env(safe-area-inset-top);z-index:5;
     background:linear-gradient(var(--bg) 70%,transparent);padding:8px 0 10px}
   .tab{flex:1;padding:10px 8px;border:1px solid var(--line);background:var(--panel);
     color:var(--dim);border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;
