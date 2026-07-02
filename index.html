@@ -21,6 +21,11 @@
     --txt:#1d2536; --dim:#68738f; --accent:#4a6ee0; --accent2:#2fae87;
     --star:#e0a400; --accent-txt:#ffffff; --shadow:rgba(30,40,80,.18);
   }
+  body.mint{
+    --bg:#adffbc; --panel:#ffffff; --panel2:#f0fff5; --line:#cfc0e8;
+    --txt:#2b2340; --dim:#6f6590; --accent:#ad8ecd; --accent2:#5bbf8a;
+    --star:#d99a00; --accent-txt:#ffffff; --shadow:rgba(100,70,140,.2);
+  }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
@@ -59,7 +64,8 @@
   .tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;
     padding:14px 10px 10px;text-align:center;position:relative;cursor:pointer;transition:.12s}
   .tile:active{transform:scale(.97)}
-  .tile .art{font-family:inherit;font-size:15px;white-space:pre;
+  .tile .art{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Apple SD Gothic Neo",sans-serif;
+    font-size:15px;white-space:pre;
     display:block;min-height:38px;display:flex;align-items:center;justify-content:center;
     overflow-x:auto}
   .tile .mini{position:absolute;top:6px;right:6px;background:transparent;border:none;
@@ -381,26 +387,33 @@ document.querySelectorAll(".tab").forEach(tab=>{
   tab.addEventListener("click",()=>setTab(tab.dataset.cat||tab.dataset.tab));
 });
 
-/* ============ 테마 (다크/라이트) ============ */
+/* ============ 테마 (다크 → 라이트 → 민트 순환) ============ */
 const THEMEKEY="asciiTool.theme";
+const THEMES={
+  dark:{next:"light",icon:"☀️",title:"밝은 테마로",meta:"#0f1420"},
+  light:{next:"mint",icon:"🌿",title:"민트 테마로",meta:"#f4f6fb"},
+  mint:{next:"dark",icon:"🌙",title:"어두운 테마로",meta:"#adffbc"},
+};
 const themeBtn=document.getElementById("themeBtn");
+let theme="dark";
 function setTheme(mode){
-  const light=mode==="light";
-  document.body.classList.toggle("light",light);
-  themeBtn.textContent=light?"🌙":"☀️";
-  themeBtn.title=light?"어두운 테마로":"밝은 테마로";
+  if(!THEMES[mode]) mode="dark";
+  theme=mode;
+  document.body.classList.toggle("light",mode==="light");
+  document.body.classList.toggle("mint",mode==="mint");
+  themeBtn.textContent=THEMES[mode].icon;
+  themeBtn.title=THEMES[mode].title;
   const m=document.querySelector('meta[name="theme-color"]');
-  if(m) m.content=light?"#f4f6fb":"#0f1420";
+  if(m) m.content=THEMES[mode].meta;
   try{localStorage.setItem(THEMEKEY,mode);}catch(e){}
 }
-themeBtn.addEventListener("click",()=>
-  setTheme(document.body.classList.contains("light")?"dark":"light"));
+themeBtn.addEventListener("click",()=>setTheme(THEMES[theme].next));
 
 /* 초기화 — 마지막에 보던 탭·테마 복원 */
 const lastTab=(()=>{try{return localStorage.getItem(TKEY);}catch(e){return null;}})();
 setTab(CATS.some(c=>c.key===lastTab)||lastTab==="favs" ? lastTab : "deco");
 const lastTheme=(()=>{try{return localStorage.getItem(THEMEKEY);}catch(e){return null;}})();
-setTheme(lastTheme==="light"?"light":"dark");
+setTheme(lastTheme);
 </script>
 </body>
 </html>
