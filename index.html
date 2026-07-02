@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ASCII 아트 · 예쁜 글씨</title>
+<title>ASCII 아트 갤러리</title>
 <meta name="theme-color" content="#0f1420">
 <!-- iPhone 홈화면 추가 시 앱처럼 동작 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -37,32 +37,17 @@
   .tab.active{background:var(--accent);color:#0c1020;border-color:var(--accent)}
   section{display:none}
   section.active{display:block}
-  /* converter input */
+  /* inputs & buttons */
   .field{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--txt);
     border-radius:12px;padding:12px 14px;font-size:16px;resize:vertical;min-height:52px}
   .field:focus{outline:none;border-color:var(--accent)}
   .hint{color:var(--dim);font-size:12px;margin:8px 2px 4px}
-  /* cards */
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;
-    padding:12px 12px 10px;margin:10px 0}
-  .card .label{font-size:12px;color:var(--dim);font-weight:600;margin-bottom:6px;
-    display:flex;align-items:center;gap:6px}
-  .preview{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    white-space:pre;overflow-x:auto;background:var(--panel2);border-radius:10px;
-    padding:10px 12px;font-size:15px;line-height:1.35;-webkit-overflow-scrolling:touch}
-  .preview.big{font-size:11px;line-height:1.05}
-  .row{display:flex;gap:8px;margin-top:8px}
   .btn{border:1px solid var(--line);background:var(--panel2);color:var(--txt);
     border-radius:10px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;
     display:inline-flex;align-items:center;gap:5px}
   .btn:active{transform:scale(.96)}
   .btn.primary{background:var(--accent);color:#0c1020;border-color:var(--accent)}
-  .btn.star.on{background:rgba(255,203,91,.16);border-color:var(--star);color:var(--star)}
   /* gallery */
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px}
-  .chip{padding:8px 14px;border:1px solid var(--line);background:var(--panel);
-    color:var(--dim);border-radius:999px;font-size:13px;font-weight:600;cursor:pointer}
-  .chip.active{background:var(--accent2);color:#0c1020;border-color:var(--accent2)}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
   .tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;
     padding:14px 10px 10px;text-align:center;position:relative;cursor:pointer;transition:.12s}
@@ -78,7 +63,7 @@
     color:var(--dim);font-size:13px;cursor:pointer;opacity:.45;padding:2px 5px;line-height:1}
   .tile .del:active{color:#ff8080;opacity:1}
   /* 추가 입력줄 */
-  .addbar{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+  .addbar{display:flex;gap:8px;margin:14px 0 0;flex-wrap:wrap}
   .addbar #newArt{flex:1;min-width:120px;font-size:16px;min-height:0;padding:10px 12px}
   .addbar #newCat{flex:0 0 auto;font-size:14px;min-height:0;padding:10px 10px;
     -webkit-appearance:none;appearance:none}
@@ -106,26 +91,19 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>✨ ASCII 아트 · 예쁜 글씨</h1>
+    <h1>✨ ASCII 아트 갤러리</h1>
     <p>광고 없는 개인용 도구 · 오프라인 동작</p>
   </header>
 
   <nav class="tabs">
-    <button class="tab active" data-tab="conv">✏️ 변환기</button>
-    <button class="tab" data-tab="gallery">🎨 갤러리</button>
+    <button class="tab active" data-cat="deco">✨ 장식</button>
+    <button class="tab" data-cat="cute">🐻 귀여운</button>
+    <button class="tab" data-cat="emotion">😊 감정</button>
     <button class="tab" data-tab="favs">⭐ 즐겨찾기</button>
   </nav>
 
-  <!-- 변환기 -->
-  <section id="conv" class="active">
-    <textarea id="input" class="field" placeholder="여기에 글자를 입력하세요 (예: hello / 안녕)" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea>
-    <div class="hint">입력하면 아래 스타일이 실시간으로 바뀝니다. 카드를 눌러 복사하세요.</div>
-    <div id="convOut"></div>
-  </section>
-
   <!-- 갤러리 -->
-  <section id="gallery">
-    <div class="chips" id="chips"></div>
+  <section id="gallery" class="active">
     <div class="grid" id="galleryGrid"></div>
     <div class="addbar">
       <input id="newArt" class="field" placeholder="이모지·아트 붙여넣기" autocapitalize="off" autocomplete="off" spellcheck="false">
@@ -161,53 +139,8 @@
 <script>
 "use strict";
 
-/* ============ 2. 예쁜 글씨 (특수문자 감싸기) ============ */
-// 화면상 글자 폭 추정 (한글/전각=2, 조합기호=0, 나머지=1)
-function dispWidth(str){
-  let w=0;
-  for(const ch of str){
-    const c=ch.codePointAt(0);
-    if((c>=0x300&&c<=0x36F)||(c>=0x1DC0&&c<=0x1DFF)||(c>=0x20D0&&c<=0x20FF)||(c>=0xFE20&&c<=0xFE2F)) continue; // 조합
-    if((c>=0x1100&&c<=0x115F)||(c>=0x2E80&&c<=0x303E)||(c>=0x3041&&c<=0x33FF)||
-       (c>=0x3400&&c<=0x4DBF)||(c>=0x4E00&&c<=0x9FFF)||(c>=0xA000&&c<=0xA4CF)||
-       (c>=0xAC00&&c<=0xD7A3)||(c>=0xF900&&c<=0xFAFF)||(c>=0xFE30&&c<=0xFE4F)||
-       (c>=0xFF00&&c<=0xFF60)||(c>=0xFFE0&&c<=0xFFE6)||c>=0x1F000) w+=2; // 전각/한글/이모지
-    else w+=1;
-  }
-  return w;
-}
-// 위아래 장식줄 사이에 글자를 가운데 정렬(앞 공백)로 넣기
-function centerBlock(top, s, bottom){
-  const ref=Math.max(dispWidth(top), dispWidth(bottom));
-  const lines=s.split("\n").map(line=>{
-    const pad=Math.max(0, Math.round((ref-dispWidth(line))/2));
-    return " ".repeat(pad)+line;
-  });
-  return top+"\n"+lines.join("\n")+"\n"+bottom;
-}
-const TRANSFORMS=[
-  // ── 앞뒤로 감싸기 ──
-  {name:"별 ✩", fn:s=>"⋆｡°✩ "+s+" ✩°｡⋆"},
-  {name:"반짝임 ✧", fn:s=>"✧･ﾟ: * "+s+" *:･ﾟ✧"},
-  {name:"하트 ♡", fn:s=>"｡ﾟ♡ "+s+" ♡ﾟ｡"},
-  {name:"하트 ❥", fn:s=>"˖⁺‧₊˚ ❥ "+s+" ❥ ˚₊‧⁺˖"},
-  {name:"꽃 ❀", fn:s=>"❀ ✿ "+s+" ✿ ❀"},
-  {name:"물결 ༘", fn:s=>"·˚ ༘ "+s+" ༘ ˚·"},
-  {name:"점 •°", fn:s=>"•°•° "+s+" °•°•"},
-  {name:"나비 彡", fn:s=>"★彡 "+s+" 彡★"},
-  {name:"괄호 ꒰꒱", fn:s=>"˚₊‧꒰ა "+s+" ໒꒱‧₊˚"},
-  {name:"라인 ※", fn:s=>"───※·°· "+s+" ·°·※───"},
-  {name:"화살 ➳", fn:s=>"➶ "+s+" ➷"},
-  // ── 위아래로 감싸기 ──
-  {name:"위아래 · 별줄", fn:s=>centerBlock("｡･:*:･ﾟ★,｡･:*:･ﾟ☆", s, "☆ﾟ･:*:･｡★ﾟ･:*:･｡")},
-  {name:"위아래 · 라인", fn:s=>centerBlock("─── ⋆⋅☆⋅⋆ ───", s, "─── ⋆⋅☆⋅⋆ ───")},
-  {name:"위아래 · 반짝", fn:s=>centerBlock("✦•·········•✦", s, "✦•·········•✦")},
-  {name:"위아래 · 꽃", fn:s=>centerBlock("˚ ༘ ೀ⋆｡˚", s, "˚｡⋆ೀ ༘ ˚")},
-  {name:"위아래 · 하트", fn:s=>centerBlock("｡♥‿♥｡", s, "｡♥‿♥｡")},
-];
-
-/* ============ 3. 갤러리 데이터 ============ */
-const CATS=[{key:"cute",label:"귀여운/동물"},{key:"emotion",label:"감정"},{key:"deco",label:"장식·구분선·하트"}];
+/* ============ 갤러리 데이터 ============ */
+const CATS=[{key:"deco",label:"장식·구분선·하트"},{key:"cute",label:"귀여운/동물"},{key:"emotion",label:"감정"}];
 const GALLERY=[
   {c:"cute",a:"ʕ•ᴥ•ʔ"},{c:"cute",a:"(=^･ω･^=)"},{c:"cute",a:"ᕕ( ᐛ )ᕗ"},
   {c:"cute",a:"૮ ˶ᵔ ᵕ ᵔ˶ ა"},{c:"cute",a:"(・(ェ)・)"},{c:"cute",a:"ʚ(๑˃̵ᴗ˂̵)ɞ"},
@@ -282,64 +215,9 @@ async function copyText(t){
   toast("복사됨!");
 }
 
-/* ============ 6. 카드 / 렌더 ============ */
-function starBtn(text){
-  const b=document.createElement("button");
-  b.className="btn star"+(isFav(text)?" on":"");
-  b.textContent=isFav(text)?"★ 저장됨":"☆ 즐겨찾기";
-  b.addEventListener("click",e=>{
-    e.stopPropagation();
-    const on=toggleFav(text);
-    b.classList.toggle("on",on);
-    b.textContent=on?"★ 저장됨":"☆ 즐겨찾기";
-    if(document.getElementById("favs").classList.contains("active")) renderFavs();
-  });
-  return b;
-}
-function makeCard(label,text,bigClass){
-  const card=document.createElement("div"); card.className="card";
-  const lab=document.createElement("div"); lab.className="label"; lab.textContent=label;
-  const pre=document.createElement("div"); pre.className="preview"+(bigClass?" big":""); pre.textContent=text;
-  const row=document.createElement("div"); row.className="row";
-  const copy=document.createElement("button"); copy.className="btn primary"; copy.textContent="복사";
-  copy.addEventListener("click",()=>copyText(text));
-  row.appendChild(copy); row.appendChild(starBtn(text));
-  card.appendChild(lab); card.appendChild(pre); card.appendChild(row);
-  return card;
-}
-
-/* 변환기 */
-const input=document.getElementById("input");
-const convOut=document.getElementById("convOut");
-function renderConv(){
-  const t=input.value;
-  convOut.innerHTML="";
-  if(!t.trim()){
-    convOut.innerHTML='<div class="empty">위에 글자를 입력하면 여러 스타일이 나타납니다.</div>';
-    return;
-  }
-  // 예쁜 글씨 (특수문자 감싸기)
-  for(const tr of TRANSFORMS){
-    let out; try{ out=tr.fn(t); }catch(e){ out=t; }
-    convOut.appendChild(makeCard(tr.name,out,false));
-  }
-}
-input.addEventListener("input",renderConv);
-
-/* 갤러리 */
-const chipsEl=document.getElementById("chips");
+/* ============ 갤러리 렌더 ============ */
 const galleryGrid=document.getElementById("galleryGrid");
-let activeCat="cute";
-function renderChips(){
-  chipsEl.innerHTML="";
-  for(const cat of CATS){
-    const b=document.createElement("button");
-    b.className="chip"+(cat.key===activeCat?" active":"");
-    b.textContent=cat.label;
-    b.addEventListener("click",()=>{activeCat=cat.key;newCat.value=cat.key;renderChips();renderGallery();});
-    chipsEl.appendChild(b);
-  }
-}
+let activeCat="deco";
 function tile(item){
   const art=item.a;
   const t=document.createElement("div"); t.className="tile";
@@ -365,7 +243,7 @@ function renderGallery(){
   galleryGrid.innerHTML="";
   const items=currentItems().filter(it=>it.c===activeCat);
   if(!items.length){
-    galleryGrid.innerHTML='<div class="empty">이 카테고리에 항목이 없어요. 위에서 추가해보세요.</div>';
+    galleryGrid.innerHTML='<div class="empty">이 카테고리에 항목이 없어요. 아래에서 추가해보세요.</div>';
     return;
   }
   for(const it of items) galleryGrid.appendChild(tile(it));
@@ -380,7 +258,7 @@ function doAdd(){
   const v=newArt.value.trim();
   if(!v){ newArt.focus(); return; }
   const cat=newCat.value;
-  if(addItem(cat,v)){ activeCat=cat; newArt.value=""; renderChips(); renderGallery(); toast("추가됨!"); }
+  if(addItem(cat,v)){ newArt.value=""; setTab(cat); toast("추가됨!"); }
   else toast("이미 있어요");
 }
 document.getElementById("addBtn").addEventListener("click",doAdd);
@@ -404,7 +282,7 @@ document.getElementById("applyBtn").addEventListener("click",()=>{
   if(Array.isArray(d.custom)) saveJSON(CKEY,d.custom);
   if(Array.isArray(d.hidden)) saveJSON(HKEY,d.hidden);
   if(Array.isArray(d.favorites)) saveFavs(d.favorites);
-  ioArea.value=""; renderChips(); renderGallery(); toast("가져왔어요!");
+  ioArea.value=""; renderGallery(); toast("가져왔어요!");
 });
 
 /* 즐겨찾기 */
@@ -413,7 +291,7 @@ function renderFavs(){
   const favs=getFavs();
   favList.innerHTML="";
   if(!favs.length){
-    favList.innerHTML='<div class="empty">아직 즐겨찾기가 없어요.<br>변환기나 갤러리에서 ☆ 를 눌러 저장하세요.</div>';
+    favList.innerHTML='<div class="empty">아직 즐겨찾기가 없어요.<br>카드의 ☆ 를 눌러 저장하세요.</div>';
     return;
   }
   const grid=document.createElement("div"); grid.className="grid";
@@ -430,21 +308,21 @@ function renderFavs(){
   favList.appendChild(grid);
 }
 
-/* ============ 7. 탭 ============ */
+/* ============ 탭 (카테고리 + 즐겨찾기) ============ */
+function setTab(catOrFavs){
+  document.querySelectorAll(".tab").forEach(t=>
+    t.classList.toggle("active",(t.dataset.cat||t.dataset.tab)===catOrFavs));
+  const isFavs=catOrFavs==="favs";
+  document.getElementById("gallery").classList.toggle("active",!isFavs);
+  document.getElementById("favs").classList.toggle("active",isFavs);
+  if(isFavs){ renderFavs(); return; }
+  activeCat=catOrFavs; newCat.value=catOrFavs; renderGallery();
+}
 document.querySelectorAll(".tab").forEach(tab=>{
-  tab.addEventListener("click",()=>{
-    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-    document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-    tab.classList.add("active");
-    document.getElementById(tab.dataset.tab).classList.add("active");
-    if(tab.dataset.tab==="favs") renderFavs();
-    if(tab.dataset.tab==="gallery") renderGallery();
-  });
+  tab.addEventListener("click",()=>setTab(tab.dataset.cat||tab.dataset.tab));
 });
 
 /* 초기화 */
-renderConv();
-renderChips();
 renderGallery();
 </script>
 </body>
