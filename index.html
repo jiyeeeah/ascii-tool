@@ -142,21 +142,71 @@
 /* ============ 갤러리 데이터 ============ */
 const CATS=[{key:"deco",label:"✨ 장식"},{key:"cute",label:"🐻 귀여운"},{key:"emotion",label:"😊 감정"}];
 const GALLERY=[
-  {c:"cute",a:"ʕ•ᴥ•ʔ"},{c:"cute",a:"(=^･ω･^=)"},{c:"cute",a:"ᕕ( ᐛ )ᕗ"},
-  {c:"cute",a:"૮ ˶ᵔ ᵕ ᵔ˶ ა"},{c:"cute",a:"(・(ェ)・)"},{c:"cute",a:"ʚ(๑˃̵ᴗ˂̵)ɞ"},
-  {c:"cute",a:"ฅ^•ﻌ•^ฅ"},{c:"cute",a:"(=ↀωↀ=)"},{c:"cute",a:"ʕ￫ᴥ￩ʔ"},
-  {c:"cute",a:"/ᐠ｡ꞈ｡ᐟ\\"},{c:"cute",a:"(๑˃ᴗ˂)ﻭ"},{c:"cute",a:"ᕦ(ò_óˇ)ᕤ"},
-  {c:"cute",a:"( ˘ ³˘)♥"},{c:"cute",a:"৻( •̀ ᗜ •́ ৻)"},{c:"cute",a:"ʕっ•ᴥ•ʔっ"},
-  {c:"emotion",a:"(づ｡◕‿‿◕｡)づ"},{c:"emotion",a:"(╯°□°）╯︵ ┻━┻"},{c:"emotion",a:"¯\\_(ツ)_/¯"},
-  {c:"emotion",a:"(ノ_<。)"},{c:"emotion",a:"(っ˘̩╭╮˘̩)っ"},{c:"emotion",a:"( ͡° ͜ʖ ͡°)"},
-  {c:"emotion",a:"(｡•́︿•̀｡)"},{c:"emotion",a:"＼(^o^)／"},{c:"emotion",a:"(ง •̀_•́)ง"},
-  {c:"emotion",a:"(≧▽≦)"},{c:"emotion",a:"(´；ω；`)"},{c:"emotion",a:"ヽ(`Д´)ﾉ"},
-  {c:"emotion",a:"(¬‿¬)"},{c:"emotion",a:"(｡♥‿♥｡)"},{c:"emotion",a:"o(≧▽≦)o"},
-  {c:"deco",a:"｡･:*:･ﾟ★"},{c:"deco",a:"─── ⋆⋅☆⋅⋆ ───"},{c:"deco",a:"♡ ♥ ❥"},
-  {c:"deco",a:"✧･ﾟ: *✧･ﾟ:*"},{c:"deco",a:"˖⁺‧₊˚♡˚₊‧⁺˖"},{c:"deco",a:"•.¸♡ ¸.•*"},
-  {c:"deco",a:"━━━━━━━━━━"},{c:"deco",a:"✦ ✧ ✦ ✧ ✦"},{c:"deco",a:"˚₊· ͟͟͞͞➳❥"},
-  {c:"deco",a:"❀ ❀ ❀"},{c:"deco",a:"⋆｡°✩"},{c:"deco",a:"˗ˏˋ ★ ˎˊ˗"},
-  {c:"deco",a:"❥❥❥"},{c:"deco",a:"°˖✧◝(⁰▿⁰)◜✧˖°"},{c:"deco",a:"♪♬ ♫♪"},
+  {c:"cute",a:"ʕ•ᴥ•ʔ"},
+  {c:"cute",a:"(=^･ω･^=)"},
+  {c:"cute",a:"ᕕ( ᐛ )ᕗ"},
+  {c:"cute",a:"૮ ˶ᵔ ᵕ ᵔ˶ ა"},
+  {c:"cute",a:"(・(ェ)・)"},
+  {c:"cute",a:"ʚ(๑˃̵ᴗ˂̵)ɞ"},
+  {c:"cute",a:"ฅ^•ﻌ•^ฅ"},
+  {c:"cute",a:"(=ↀωↀ=)"},
+  {c:"cute",a:"ʕ￫ᴥ￩ʔ"},
+  {c:"cute",a:"/ᐠ｡ꞈ｡ᐟ\\"},
+  {c:"cute",a:"(๑˃ᴗ˂)ﻭ"},
+  {c:"cute",a:"ᕦ(ò_óˇ)ᕤ"},
+  {c:"cute",a:"( ˘ ³˘)♥"},
+  {c:"cute",a:"৻( •̀ ᗜ •́ ৻)"},
+  {c:"cute",a:"ʕっ•ᴥ•ʔっ"},
+  {c:"cute",a:"ᖤ • ᴥ • ᖢ"},
+  {c:"emotion",a:"(づ｡◕‿‿◕｡)づ"},
+  {c:"emotion",a:"(╯°□°）╯︵ ┻━┻"},
+  {c:"emotion",a:"¯\\_(ツ)_/¯"},
+  {c:"emotion",a:"(ノ_<。)"},
+  {c:"emotion",a:"(っ˘̩╭╮˘̩)っ"},
+  {c:"emotion",a:"( ͡° ͜ʖ ͡°)"},
+  {c:"emotion",a:"(｡•́︿•̀｡)"},
+  {c:"emotion",a:"＼(^o^)／"},
+  {c:"emotion",a:"(ง •̀_•́)ง"},
+  {c:"emotion",a:"(≧▽≦)"},
+  {c:"emotion",a:"(´；ω；`)"},
+  {c:"emotion",a:"ヽ(`Д´)ﾉ"},
+  {c:"emotion",a:"(¬‿¬)"},
+  {c:"emotion",a:"(｡♥‿♥｡)"},
+  {c:"emotion",a:"o(≧▽≦)o"},
+  {c:"deco",a:"｡･:*:･ﾟ★"},
+  {c:"deco",a:"─── ⋆⋅☆⋅⋆ ───"},
+  {c:"deco",a:"♡ ♥ ❥"},
+  {c:"deco",a:"✧･ﾟ: *✧･ﾟ:*"},
+  {c:"deco",a:"˖⁺‧₊˚♡˚₊‧⁺˖"},
+  {c:"deco",a:"•.¸♡ ¸.•*"},
+  {c:"deco",a:"━━━━━━━━━━"},
+  {c:"deco",a:"✦ ✧ ✦ ✧ ✦"},
+  {c:"deco",a:"˚₊· ͟͟͞͞➳❥"},
+  {c:"deco",a:"❀ ❀ ❀"},
+  {c:"deco",a:"⋆｡°✩"},
+  {c:"deco",a:"˗ˏˋ ★ ˎˊ˗"},
+  {c:"deco",a:"❥❥❥"},
+  {c:"deco",a:"°˖✧◝(⁰▿⁰)◜✧˖°"},
+  {c:"deco",a:"♪♬ ♫♪"},
+  {c:"deco",a:"˚₊‧꒰ა  ʚïɞ  ໒꒱ ‧₊˚"},
+  {c:"deco",a:"˚˖𓍢ִ໋`✧˚.⋆𖧧  ☀︎  ⋆˚✿˖°"},
+  {c:"deco",a:"❥･•˚‧｡♥｡‧˚"},
+  {c:"deco",a:"˙˚∘⊹🦋⊹∘˚˙"},
+  {c:"deco",a:"°❀⋆ .ೃ࿔*:･ 𓂃 ࣪˖ ִֶָ𐀔"},
+  {c:"deco",a:"*✿࿐ྀུ༅✿"},
+  {c:"deco",a:"₊✩‧₊˚౨ৎ˚₊✩‧₊☾⋆｡𖦹 °✩"},
+  {c:"deco",a:"𓍢ִ໋🌷͙֒⋆₊💌˚⊹♡"},
+  {c:"deco",a:"ೀ⋆｡🌷"},
+  {c:"deco",a:"𓍢ִ໋🌷͙֒"},
+  {c:"deco",a:"˚˖𓍢ִ໋🎀˚⋆"},
+  {c:"deco",a:"⊹ ͜ ͜ ୨୧ ͜ ͜ ⊹"},
+  {c:"deco",a:".·:*¨¨*:·."},
+  {c:"deco",a:"♡ ݁₊ . 🧸"},
+  {c:"deco",a:"ੈ✩‧₊˚༺☆༻*ੈ✩‧₊˚"},
+  {c:"deco",a:"˚₊‧꒰ა☆໒꒱‧₊˚"},
+  {c:"deco",a:"⋅ᯓᡣ𐭩 𝜗𝜚 ⊹ ‧₊˚"},
+  {c:"deco",a:"𑁍ࠬܓ . ݁₊᪥⋆. ݁ .𖥔 ݁ ˖"},
+  {c:"deco",a:"⋆｡‧˚ʚɞ˚‧｡⋆"},
 ];
 
 /* ============ 4. 즐겨찾기 (localStorage) ============ */
@@ -175,10 +225,12 @@ function loadJSON(k){ try{return JSON.parse(localStorage.getItem(k))||[];}catch(
 function saveJSON(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
 function getCustom(){ return loadJSON(CKEY); }        // [{c,a}]
 function getHidden(){ return loadJSON(HKEY); }        // [art]
-// 화면에 보일 최종 목록 = (기본 - 숨김) + 내가 추가
+// 화면에 보일 최종 목록 = (기본 - 숨김) + 내가 추가 (기본에 이미 있으면 중복 제거)
 function currentItems(){
   const hidden=new Set(getHidden());
-  return GALLERY.filter(it=>!hidden.has(it.a)).concat(getCustom());
+  const base=GALLERY.filter(it=>!hidden.has(it.a));
+  const seen=new Set(base.map(it=>it.c+"\n"+it.a));
+  return base.concat(getCustom().filter(it=>!seen.has(it.c+"\n"+it.a)));
 }
 function isCustom(art){ return getCustom().some(i=>i.a===art); }
 function addItem(cat,art){
