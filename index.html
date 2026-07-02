@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ASCII 아트 갤러리</title>
-<meta name="theme-color" content="#0f1420">
+<meta name="theme-color" content="#f4f6fb">
 <!-- iPhone 홈화면 추가 시 앱처럼 동작 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -20,11 +20,6 @@
     --bg:#f4f6fb; --panel:#ffffff; --panel2:#eef1f8; --line:#d9dfec;
     --txt:#1d2536; --dim:#68738f; --accent:#4a6ee0; --accent2:#2fae87;
     --star:#e0a400; --accent-txt:#ffffff; --shadow:rgba(30,40,80,.18);
-  }
-  body.mint{
-    --bg:#adffbc; --panel:#ffffff; --panel2:#f0fff5; --line:#cfc0e8;
-    --txt:#2b2340; --dim:#6f6590; --accent:#ad8ecd; --accent2:#5bbf8a;
-    --star:#d99a00; --accent-txt:#ffffff; --shadow:rgba(100,70,140,.2);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -387,20 +382,18 @@ document.querySelectorAll(".tab").forEach(tab=>{
   tab.addEventListener("click",()=>setTab(tab.dataset.cat||tab.dataset.tab));
 });
 
-/* ============ 테마 (다크 → 라이트 → 민트 순환) ============ */
+/* ============ 테마 (라이트 기본, 다크 전환) ============ */
 const THEMEKEY="asciiTool.theme";
 const THEMES={
+  light:{next:"dark",icon:"🌙",title:"어두운 테마로",meta:"#f4f6fb"},
   dark:{next:"light",icon:"☀️",title:"밝은 테마로",meta:"#0f1420"},
-  light:{next:"mint",icon:"🌿",title:"민트 테마로",meta:"#f4f6fb"},
-  mint:{next:"dark",icon:"🌙",title:"어두운 테마로",meta:"#adffbc"},
 };
 const themeBtn=document.getElementById("themeBtn");
-let theme="dark";
+let theme="light";
 function setTheme(mode){
-  if(!THEMES[mode]) mode="dark";
+  if(!THEMES[mode]) mode="light";
   theme=mode;
   document.body.classList.toggle("light",mode==="light");
-  document.body.classList.toggle("mint",mode==="mint");
   themeBtn.textContent=THEMES[mode].icon;
   themeBtn.title=THEMES[mode].title;
   const m=document.querySelector('meta[name="theme-color"]');
