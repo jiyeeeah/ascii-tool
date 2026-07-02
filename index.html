@@ -14,7 +14,12 @@
   :root{
     --bg:#0f1420; --panel:#171d2c; --panel2:#1e2536; --line:#2a3350;
     --txt:#e6ebf5; --dim:#8b96b0; --accent:#7c9eff; --accent2:#a0f0d0;
-    --star:#ffcb5b;
+    --star:#ffcb5b; --accent-txt:#0c1020; --shadow:rgba(0,0,0,.4);
+  }
+  body.light{
+    --bg:#f4f6fb; --panel:#ffffff; --panel2:#eef1f8; --line:#d9dfec;
+    --txt:#1d2536; --dim:#68738f; --accent:#4a6ee0; --accent2:#2fae87;
+    --star:#e0a400; --accent-txt:#ffffff; --shadow:rgba(30,40,80,.18);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
@@ -26,15 +31,17 @@
     line-height:1.5;
   }
   .wrap{max-width:720px;margin:0 auto;padding:16px 14px 80px}
+  header{position:relative}
   header h1{font-size:20px;margin:6px 0 2px;letter-spacing:-.02em}
   header p{margin:0 0 14px;color:var(--dim);font-size:13px}
+  #themeBtn{position:absolute;top:2px;right:0;font-size:16px;padding:7px 10px;border-radius:999px}
   /* tabs */
   .tabs{display:flex;gap:6px;position:sticky;top:0;z-index:5;
     background:linear-gradient(var(--bg) 70%,transparent);padding:8px 0 10px}
   .tab{flex:1;padding:10px 8px;border:1px solid var(--line);background:var(--panel);
     color:var(--dim);border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;
     text-align:center;transition:.15s}
-  .tab.active{background:var(--accent);color:#0c1020;border-color:var(--accent)}
+  .tab.active{background:var(--accent);color:var(--accent-txt);border-color:var(--accent)}
   section{display:none}
   section.active{display:block}
   /* inputs & buttons */
@@ -46,7 +53,7 @@
     border-radius:10px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;
     display:inline-flex;align-items:center;gap:5px}
   .btn:active{transform:scale(.96)}
-  .btn.primary{background:var(--accent);color:#0c1020;border-color:var(--accent)}
+  .btn.primary{background:var(--accent);color:var(--accent-txt);border-color:var(--accent)}
   /* gallery */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
   .tile{background:var(--panel);border:1px solid var(--line);border-radius:14px;
@@ -78,14 +85,11 @@
   .empty{color:var(--dim);text-align:center;padding:40px 10px;font-size:14px}
   /* toast */
   #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));
-    transform:translateX(-50%) translateY(20px);background:var(--accent);color:#0c1020;
+    transform:translateX(-50%) translateY(20px);background:var(--accent);color:var(--accent-txt);
     padding:10px 20px;border-radius:999px;font-weight:700;font-size:14px;opacity:0;
-    pointer-events:none;transition:.2s;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+    pointer-events:none;transition:.2s;z-index:50;box-shadow:0 6px 20px var(--shadow)}
   #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   footer{color:var(--dim);font-size:11px;text-align:center;margin-top:24px;line-height:1.6}
-  @media (prefers-color-scheme: light){
-    /* 다크 기본 유지 — 라이트에서도 동일 팔레트로 눈 편하게 */
-  }
 </style>
 </head>
 <body>
@@ -93,6 +97,7 @@
   <header>
     <h1>✨ ASCII 아트 갤러리</h1>
     <p>광고 없는 개인용 도구 · 오프라인 동작</p>
+    <button id="themeBtn" class="btn" title="테마 전환">☀️</button>
   </header>
 
   <nav class="tabs">
@@ -376,9 +381,26 @@ document.querySelectorAll(".tab").forEach(tab=>{
   tab.addEventListener("click",()=>setTab(tab.dataset.cat||tab.dataset.tab));
 });
 
-/* 초기화 — 마지막에 보던 탭 복원 */
+/* ============ 테마 (다크/라이트) ============ */
+const THEMEKEY="asciiTool.theme";
+const themeBtn=document.getElementById("themeBtn");
+function setTheme(mode){
+  const light=mode==="light";
+  document.body.classList.toggle("light",light);
+  themeBtn.textContent=light?"🌙":"☀️";
+  themeBtn.title=light?"어두운 테마로":"밝은 테마로";
+  const m=document.querySelector('meta[name="theme-color"]');
+  if(m) m.content=light?"#f4f6fb":"#0f1420";
+  try{localStorage.setItem(THEMEKEY,mode);}catch(e){}
+}
+themeBtn.addEventListener("click",()=>
+  setTheme(document.body.classList.contains("light")?"dark":"light"));
+
+/* 초기화 — 마지막에 보던 탭·테마 복원 */
 const lastTab=(()=>{try{return localStorage.getItem(TKEY);}catch(e){return null;}})();
 setTab(CATS.some(c=>c.key===lastTab)||lastTab==="favs" ? lastTab : "deco");
+const lastTheme=(()=>{try{return localStorage.getItem(THEMEKEY);}catch(e){return null;}})();
+setTheme(lastTheme==="light"?"light":"dark");
 </script>
 </body>
 </html>
